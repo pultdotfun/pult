@@ -1,4 +1,4 @@
-from prometheus_client import Counter, Histogram, Info
+from prometheus_client import Counter, Histogram, Info, Gauge
 import time
 
 # Request metrics
@@ -27,6 +27,32 @@ ENGAGEMENT_PROCESSED = Counter(
 
 # System info
 SYSTEM_INFO = Info('pult_system', 'System information')
+
+# WebSocket metrics
+WEBSOCKET_CONNECTIONS = Gauge(
+    'pult_websocket_connections',
+    'Number of active WebSocket connections',
+    ['user_id']
+)
+
+WEBSOCKET_MESSAGES = Counter(
+    'pult_websocket_messages_total',
+    'Number of WebSocket messages processed',
+    ['direction', 'type']
+)
+
+# Background task metrics
+BACKGROUND_TASKS = Counter(
+    'pult_background_tasks_total',
+    'Number of background tasks processed',
+    ['task_type', 'status']
+)
+
+PROCESSING_TIME = Histogram(
+    'pult_processing_time_seconds',
+    'Time taken to process user data',
+    ['task_type']
+)
 
 class MetricsMiddleware:
     async def __call__(self, request, call_next):
